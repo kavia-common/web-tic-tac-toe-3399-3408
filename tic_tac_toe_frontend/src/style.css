@@ -1,96 +1,226 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-primary: #2563EB; /* Blue */
+  --color-amber: #F59E0B;   /* Amber */
+  --color-error: #EF4444;
+  --color-bg: #f9fafb;
+  --color-surface: #ffffff;
+  --color-text: #111827;
+  --shadow-soft: 0 10px 25px rgba(17, 24, 39, 0.08);
+  --shadow-focus: 0 0 0 4px rgba(37, 99, 235, 0.25);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 200ms ease;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
 }
 
 body {
-  margin: 0;
-  display: flex;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--color-text);
+  background:
+    radial-gradient(1200px 400px at 10% 0%, rgba(59,130,246,0.08), rgba(0,0,0,0) 60%),
+    radial-gradient(800px 300px at 90% 10%, rgba(107,114,128,0.08), rgba(0,0,0,0) 60%),
+    var(--color-bg);
+  display: grid;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.app-container {
+  width: min(92vw, 720px);
+  margin: 4vh auto;
+  padding: 28px;
+  background: linear-gradient(to bottom right, rgba(37, 99, 235, 0.06), rgba(249, 250, 251, 1));
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.app-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 36px);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.status-panel {
+  display: grid;
+  gap: 6px;
+  margin: 14px auto 18px;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+.turn-indicator {
+  font-weight: 600;
 }
 
-.card {
-  padding: 2em;
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  transition: transform var(--transition);
 }
 
-.read-the-docs {
-  color: #888;
+.badge-x {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--color-primary);
+  border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.badge-o {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-amber);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.game-status {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.board-wrapper {
+  display: grid;
+  place-items: center;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(80px, 1fr));
+  gap: 10px;
+  width: min(92vw, 420px);
+  margin: 8px auto 18px;
+}
+
+.cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--color-surface);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 2px 10px rgba(17,24,39,0.05);
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  font-size: clamp(24px, 7vw, 48px);
+  font-weight: 800;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background-color var(--transition);
+  user-select: none;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.cell:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 6px 20px rgba(17,24,39,0.10);
+  border-color: rgba(37,99,235,0.3);
+}
+
+.cell:active {
+  transform: translateY(0);
+}
+
+.cell:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.cell.cell-x {
+  color: var(--color-primary);
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(255,255,255,1));
+  border-color: rgba(37,99,235,0.35);
+}
+
+.cell.cell-o {
+  color: var(--color-amber);
+  background: linear-gradient(180deg, rgba(245,158,11,0.08), rgba(255,255,255,1));
+  border-color: rgba(245,158,11,0.35);
+}
+
+.cell-win {
+  animation: pulse 900ms ease-in-out infinite alternate;
+  border-color: rgba(16,185,129,0.55);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.18), 0 10px 30px rgba(16,185,129,0.15);
+}
+
+@keyframes pulse {
+  from { transform: translateY(-1px) scale(1.0); }
+  to   { transform: translateY(-2px) scale(1.02); }
+}
+
+.controls {
+  display: grid;
+  place-items: center;
+  margin-top: 6px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid rgba(17,24,39,0.12);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition), background-color var(--transition), border-color var(--transition), color var(--transition), box-shadow var(--transition);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 2px 10px rgba(17,24,39,0.06);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(37,99,235,0.35);
+  box-shadow: 0 6px 22px rgba(17,24,39,0.12);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(255,255,255,1));
+  border-color: rgba(37,99,235,0.35);
+  color: var(--color-primary);
+}
+
+.app-footer {
+  margin-top: 18px;
+  text-align: center;
+  color: #6b7280;
+}
+
+@media (max-width: 420px) {
+  .app-container {
+    padding: 18px;
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  .board {
+    gap: 8px;
+    width: 100%;
   }
 }
